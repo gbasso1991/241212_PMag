@@ -103,45 +103,12 @@ def lector_resultados(path):
     return meta, files, time,temperatura,  Mr, Hc, campo_max, mag_max, xi_M_0, frecuencia_fund, magnitud_fund , dphi_fem, SAR, tau, N
 
 
-#%%
-# pendientes_212 = glob(os.path.join('./212_150', '**', 'pendientes.txt'),recursive=True)
-# pendientes_238 = glob(os.path.join('./238_150', '**', 'pendientes.txt'),recursive=True)
-# pendientes_265 = glob(os.path.join('./265_150', '**', 'pendientes.txt'),recursive=True)
-# pendientes_212 = glob(os.path.join('./212_150', '**', 'pendientes.txt'),recursive=True)
-
+#%% Pendientes
 pendientes_100 = glob(os.path.join('./100kHz', '**', 'pendientes.txt'),recursive=True)
 pendientes_300 = glob(os.path.join('./300kHz', '**', 'pendientes.txt'),recursive=True)
 
 resultados_100 = glob(os.path.join('./100kHz', '**', '*resultados.txt'),recursive=True)
 resultados_300 = glob(os.path.join('./300kHz', '**', '*resultados.txt'),recursive=True)
-#%%
-# all_212=[]
-# for f in pendientes_212:
-#     all_212.append(np.loadtxt(f,dtype='float'))
-# conc_212=np.concatenate(all_212,axis=0)    
-# mean_212=np.mean(conc_212)
-# std_212=np.std(conc_212)
-# Pendiente_212=ufloat(mean_212,std_212)
-# print('-'*40,'\n',f'Pendiente 212kHz = {Pendiente_212:.2e} A/mVs ({len(conc_212)} muestras)')
-
-# all_238=[]
-# for f in pendientes_238:
-#     all_238.append(np.loadtxt(f,dtype='float'))
-# conc_238=np.concatenate(all_238,axis=0)    
-# mean_238=np.mean(conc_238)
-# std_238=np.std(conc_238)
-# Pendiente_238=ufloat(mean_238,std_238)
-# print('-'*40,'\n',f'Pendiente 238kHz = {Pendiente_238:.2e} A/mVs ({len(conc_238)} muestras)')
-
-# all_265=[]
-# for f in pendientes_265:
-#     all_265.append(np.loadtxt(f,dtype='float'))
-# conc_265=np.concatenate(all_265,axis=0)    
-# mean_265=np.mean(conc_265)
-# std_265=np.std(conc_265)
-# Pendiente_265=ufloat(mean_265,std_265)
-# print('-'*40,'\n',f'Pendiente 265kHz = {Pendiente_265:.2e} A/mVs ({len(conc_265)} muestras)')
-
 
 all_100=[]
 for f in pendientes_100:
@@ -168,113 +135,81 @@ print('-'*40,'\n',f'Pendiente 300kHz = {Pendiente_300:.2e} A/mVs ({len(conc_300)
 # pend_all=ufloat(mean_all,std_all)
 # print('-'*40,'\n',f'Pendiente promedio para las 4 frecuencias = {pend_all:.2e} A/mVs ({len(pendientes_all)} muestras)')
 
-#%%
-
+#%% Mag Max
 all_res_100=[]
 for f in resultados_100:
     _, _, _,_,  _, _, _, mag_max, _, _, _ , _, _, _, _=lector_resultados(f)
     all_res_100.append(mag_max)
-conc_100=np.concatenate(all_res_100,axis=0)    
-mean_100=np.mean(conc_100)
-std_100=np.std(conc_100)
+conc_res_100=np.concatenate(all_res_100,axis=0)    
+mean_100=np.mean(conc_res_100)
+std_100=np.std(conc_res_100)
 mag_max_100=ufloat(mean_100,std_100)
-print('-'*40,'\n',f'mag_max 100kHz = {mag_max_100:.1f} A/m ({len(conc_100)} muestras)')
-
-
-
+print('-'*40,'\n',f'mag_max 100kHz = {mag_max_100:.1f} A/m ({len(conc_res_100)} muestras)')
 all_res_300=[]
 for f in resultados_300:
     _, _, _,_,  _, _, _, mag_max, _, _, _ , _, _, _, _=lector_resultados(f)
     all_res_300.append(mag_max)
-conc_300=np.concatenate(all_res_300,axis=0)    
-mean_300=np.mean(conc_300)
-std_300=np.std(conc_300)
+conc_res_300=np.concatenate(all_res_300,axis=0)    
+mean_300=np.mean(conc_res_300)
+std_300=np.std(conc_res_300)
 mag_max_300=ufloat(mean_300,std_300)
-print('-'*40,'\n',f'mag_max 300kHz = {mag_max_300:.1f} A/m ({len(conc_300)} muestras)')
-#%%
-all_res_300=[]
-for f in resultados_300:
-    all_res_300.append(np.loadtxt(f,dtype='float'))
-conc_300=np.concatenate(all_res_300,axis=0)    
-mean_300=np.mean(conc_300)
-std_300=np.std(conc_300)
-Pendiente_300=ufloat(mean_300,std_300)
-print('-'*40,'\n',f'Pendiente 300kHz = {Pendiente_300:.2e} A/mVs ({len(conc_300)} muestras)')
+print('-'*40,'\n',f'mag_max 300kHz = {mag_max_300:.1f} A/m ({len(conc_res_300)} muestras)')
 
+
+# %% Ploteo ciclos
+ciclos_100 = glob(os.path.join('100kHz','**', '*ciclo_promedio*'),recursive=True)
+ciclos_100.sort()
+labels_100 = ['1','2','3','4']
+
+ciclos_300 = glob(os.path.join('300kHz','**', '*ciclo_promedio*'),recursive=True)
+ciclos_300.sort()
+labels_300 = ['1','2','3','4']
+
+#%%
+_,_,_,H100_1,M_100_1,meta_100_1=lector_ciclos(ciclos_100[0]) 
+_,_,_,H100_2,M_100_2,meta_100_2=lector_ciclos(ciclos_100[1]) 
+_,_,_,H100_3,M_100_3,meta_100_3=lector_ciclos(ciclos_100[2]) 
+_,_,_,H100_4,M_100_4,meta_100_4=lector_ciclos(ciclos_100[3])
+
+
+_,_,_,H300_1,M_300_1,meta_300_1=lector_ciclos(ciclos_300[0]) 
+_,_,_,H300_2,M_300_2,meta_300_2=lector_ciclos(ciclos_300[1]) 
+_,_,_,H300_3,M_300_3,meta_300_3=lector_ciclos(ciclos_300[2]) 
+_,_,_,H300_4,M_300_4,meta_300_4=lector_ciclos(ciclos_300[3])
+
+
+#%%
+
+fig, (ax1, ax2) = plt.subplots(ncols=2, figsize=(12, 5), constrained_layout=True,sharey=True)
+
+# Ciclos 100
+ax1.plot(H100_1, M_100_1, label=labels_100[0])
+ax1.plot(H100_2, M_100_2, label=labels_100[1])
+ax1.plot(H100_3, M_100_3, label=labels_100[2])
+ax1.plot(H100_4, M_100_4, label=labels_100[3])
+ax1.text(0.75,1/3,f'M max = {mag_max_100:.0f} A/m\n{len(conc_res_100)} muestras',bbox=dict(facecolor='tab:blue', alpha=0.5),transform=ax1.transAxes,va='center',ha='center')
+
+ax1.set_title('100 kHz', fontsize=14)
+
+
+# Ciclos 300
+ax2.plot(H300_1, M_300_1, label=labels_300[0])
+ax2.plot(H300_2, M_300_2, label=labels_300[1])
+ax2.plot(H300_3, M_300_3, label=labels_300[2])
+ax2.plot(H300_4, M_300_4, label=labels_300[3])
+ax2.text(0.75,1/3,f'M max = {mag_max_300:.0f} A/m\n{len(conc_res_300)} muestras',bbox=dict(facecolor='tab:blue', alpha=0.5),transform=ax2.transAxes,va='center',ha='center')
+
+
+ax2.set_title('300 kHz', fontsize=14)
+
+ax1.set_ylabel('M (A/m)')
+for a in [ax1,ax2]:
+    a.grid()
+    a.legend(ncol=1)
+    a.set_xlabel('H (A/m)')
+plt.suptitle('Paramagneto (Dy$_2$O$_3$) - 12/12/24')
+plt.savefig('ciclos_100_300.png', dpi=400, facecolor='w')
+plt.savefig('Paramagneto_100_300_241212.png',dpi=300)
+plt.show()
 
 # %%
-# t_135_1,H_Vs_135_1,M_Vs_135_1,H_kAm_135_1,M_Am_135_1,_= lector_ciclos(ciclos_135[0])
-# t_135_2,H_Vs_135_2,M_Vs_135_2,H_kAm_135_2,M_Am_135_2,_= lector_ciclos(ciclos_135[1])
-# t_135_3,H_Vs_135_3,M_Vs_135_3,H_kAm_135_3,M_Am_135_3,_= lector_ciclos(ciclos_135[2])
-
-# t_212_1,H_Vs_212_1,M_Vs_212_1,H_kAm_212_1,M_Am_212_1,_= lector_ciclos(ciclos_212[0])
-# t_212_2,H_Vs_212_2,M_Vs_212_2,H_kAm_212_2,M_Am_212_2,_= lector_ciclos(ciclos_212[1])
-# t_212_3,H_Vs_212_3,M_Vs_212_3,H_kAm_212_3,M_Am_212_3,_= lector_ciclos(ciclos_135[2])
-
-# t_300_1,H_Vs_300_1,M_Vs_300_1,H_kAm_300_1,M_Am_300_1,_= lector_ciclos(ciclos_300[0])
-# t_300_2,H_Vs_300_2,M_Vs_300_2,H_kAm_300_2,M_Am_300_2,_= lector_ciclos(ciclos_300[1])
-# t_300_3,H_Vs_300_3,M_Vs_300_3,H_kAm_300_3,M_Am_300_3,_= lector_ciclos(ciclos_300[2])
-# #%%
-# fig,ax = plt.subplots(figsize=(8,6),constrained_layout=True)
-# ax.plot(H_kAm_135_1,M_Vs_135_1)
-# ax.plot(H_kAm_135_2,M_Vs_135_2)
-# ax.plot(H_kAm_135_3,M_Vs_135_3)
-
-# ax.plot(H_kAm_212_1,M_Vs_212_1)
-# ax.plot(H_kAm_212_2,M_Vs_212_2)
-# ax.plot(H_kAm_212_3,M_Vs_212_3)
-
-# ax.plot(H_kAm_300_1,M_Vs_300_1)
-# ax.plot(H_kAm_300_2,M_Vs_300_2)
-# ax.plot(H_kAm_300_3,M_Vs_300_3)
-
-# ax.grid()
-# ax.set_ylabel('M (V*s)')
-# ax.set_xlabel('H (A/m)')
-# #%% Ajuste lineal sobre cada ciclo
-# def lineal(x,m,n):
-#     return m*x+n
-
-# (m_135_1,n_135_1),_ = curve_fit(f=lineal, xdata=H_kAm_135_1,ydata=M_Vs_135_1)
-# (m_135_2,n_135_2),_ = curve_fit(f=lineal, xdata=H_kAm_135_2,ydata=M_Vs_135_2)
-# (m_135_3,n_135_3),_ = curve_fit(f=lineal, xdata=H_kAm_135_3,ydata=M_Vs_135_3)
-
-# (m_212_1,n_212_1),_ = curve_fit(f=lineal, xdata=H_kAm_212_1,ydata=M_Vs_212_1)
-# (m_212_2,n_212_2),_ = curve_fit(f=lineal, xdata=H_kAm_212_2,ydata=M_Vs_212_2)
-# (m_212_3,n_212_3),_ = curve_fit(f=lineal, xdata=H_kAm_212_3,ydata=M_Vs_212_3)
-
-# (m_300_1,n_300_1),_ = curve_fit(f=lineal, xdata=H_kAm_300_1,ydata=M_Vs_300_1)
-# (m_300_2,n_300_2),_ = curve_fit(f=lineal, xdata=H_kAm_300_2,ydata=M_Vs_300_2)
-# (m_300_3,n_300_3),_ = curve_fit(f=lineal, xdata=H_kAm_300_3,ydata=M_Vs_300_3)
-
-# m_mean  = np.mean(np.array([m_135_1,m_135_2,m_135_3,m_212_1,m_212_2,m_212_3,m_300_1,m_300_2,m_300_3]))
-# m_std = np.std(np.array([m_135_1,m_135_2,m_135_3,m_212_1,m_212_2,m_212_3,m_300_1,m_300_2,m_300_3]))
-# m =ufloat(m_mean,m_std)
-# print(f'Pendiente media = {m:.2e} Vs/A/m')
-# n_mean  = np.mean(np.array([n_135_1,n_135_2,n_135_3,n_212_1,n_212_2,n_212_3,n_300_1,n_300_2,n_300_3]))
-
-# #%%
-# x_new= np.linspace(-57712,57712,100)
-# y_new= lineal(x_new,m_mean,n_mean)
-
-# fig,ax = plt.subplots(constrained_layout=True)
-# ax.plot(H_kAm_135_1,M_Vs_135_1)
-# ax.plot(H_kAm_135_2,M_Vs_135_2)
-# ax.plot(H_kAm_135_3,M_Vs_135_3)
-
-# ax.plot(H_kAm_212_1,M_Vs_212_1)
-# ax.plot(H_kAm_212_2,M_Vs_212_2)
-# ax.plot(H_kAm_212_3,M_Vs_212_3)
-
-# ax.plot(H_kAm_300_1,M_Vs_300_1)
-# ax.plot(H_kAm_300_2,M_Vs_300_2)
-# ax.plot(H_kAm_300_3,M_Vs_300_3)
-
-# ax.plot(x_new,y_new,'o-',label=f'$< m > =${m} Vs/A/m')
-# ax.legend()
-
-# ax.grid()
-# ax.set_ylabel('M (V*s)')
-# ax.set_xlabel('H (A/m)')
-# ax.set_title('Patron Dy$_2$O$_3$')
-# plt.show()
